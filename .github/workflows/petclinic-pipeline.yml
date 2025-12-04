@@ -39,7 +39,7 @@ jobs:
       # -----------------------------------------------------
       - name: Upload artifact to Artifactory
         run: |
-          jf rt upload "target/*.jar" "https://testakanksha.jfrog.io/libs-release-local/petclinic/" \
+          jf rt upload "target/*.jar" "libs-release-local/petclinic/" \
             --build-name=petclinic-build \
             --build-number=${{ github.run_number }}
 
