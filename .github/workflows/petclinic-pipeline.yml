@@ -18,3 +18,23 @@ jobs:
           cache: maven
       - name: Build with Maven
         run: mvn clean package -DskipTests
+      - name: Login to Docker registry (Artifactory)
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ secrets.ARTIFACTORY_REGISTRY }}
+          username: ${{ secrets.ARTIFACTORY_USERNAME }}
+          password: ${{ secrets.ARTIFACTORY_PASSWORD }}
+
+      - name: Build & push Docker image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: Dockerfile
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: |
+            ${{ secrets.ARTIFACTORY_REGISTRY }}/petclinic/spring-petclinic:latest
+            ${{ secrets.ARTIFACTORY_REGISTRY }}/petclinic/spring-petclinic:${{ github.sha }}
+
+      # 6. Display done
+      - name: Show image pushed message
+        run: echo "Docker image for Spring PetClinic pushed to registry"
