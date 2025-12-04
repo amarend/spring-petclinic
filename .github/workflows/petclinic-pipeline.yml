@@ -30,7 +30,7 @@ jobs:
         run: |
           jf config add myserver \
             --url="${{ secrets.JF_URL }}" \
-            --user="${{ secrets.JF_USER }}" \
+            --user="${{ secrets.JF_USERNAME }}" \
             --password="${{ secrets.JF_PASSWORD }}" \
             --interactive=false
 
