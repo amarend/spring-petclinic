@@ -24,7 +24,7 @@ jobs:
       - name: Configure JFrog CLI
         run: |
           jf config add myserver \
-            --url="${{ secrets.JF_URL }}" \
+            --url="https://testakanksha.jfrog.io" \
             --access-token="${{ secrets.JF_ACCESS_TOKEN }}" \
             --interactive=false
 
