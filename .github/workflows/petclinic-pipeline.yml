@@ -32,7 +32,7 @@ jobs:
       - name: Upload JAR to Artifactory for scanning
         run: |
           jf rt upload "target/*.jar" \
-            "libs-release-local/petclinic/" \
+            "docker-spring-docker-local/petclinic/" \
             --flat=true \
             --build-name=petclinic-build \
             --build-number=${{ github.run_number }}
