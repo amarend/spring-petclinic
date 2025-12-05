@@ -39,8 +39,8 @@ jobs:
 
       - name: Add Build Info (env + git)
         run: |
-          jf rt build-add-env petclinic-build ${{ github.run_number }}
-          jf rt build-add-git petclinic-build ${{ github.run_number }}
+          jf rt build-collect-env petclinic-build ${{ github.run_number }}
+          jf rt build-collect-git petclinic-build ${{ github.run_number }}
 
       - name: Publish Build Info
         run: jf rt build-publish petclinic-build ${{ github.run_number }}
