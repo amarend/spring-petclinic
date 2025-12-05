@@ -33,6 +33,7 @@ jobs:
         run: |
           jf rt upload "target/*.jar" \
             "libs-release-local/petclinic/" \
+            --flat=true \
             --build-name=petclinic-build \
             --build-number=${{ github.run_number }}
 
