@@ -18,27 +18,21 @@ jobs:
           cache: maven
       - name: Build with Maven
         run: mvn clean package -DskipTests
-
-
-      # -----------------------------------------------------
-      # Install & Configure JFrog CLI for Build + Xray Scan
-      # -----------------------------------------------------
       - name: Install JFrog CLI
-        uses: jfrog/setup-jfrog-cli@v4.6.1
+        uses: jfrog/setup-jfrog-cli@v4
 
       - name: Configure JFrog CLI
         run: |
           jf config add myserver \
             --url="${{ secrets.JF_URL }}" \
-            --user="${{ secrets.JF_USERNAME }}" \
-            --password="${{ secrets.JF_PASSWORD }}" \
+            --access-token="${{ secrets.JF_ACCESS_TOKEN }}" \
             --interactive=false
-      # -----------------------------------------------------
-      # Upload JAR as artifact + publish build info
-      # -----------------------------------------------------
-      - name: Upload artifact to Artifactory
+
+      # Upload artifact to Artifactory for Xray scanning
+      - name: Upload JAR to Artifactory for scanning
         run: |
-          jf rt upload "target/*.jar" "libs-release-local/petclinic/" \
+          jf rt upload "target/*.jar" \
+            "libs-release-local/petclinic/" \
             --build-name=petclinic-build \
             --build-number=${{ github.run_number }}
 
@@ -50,17 +44,13 @@ jobs:
       - name: Publish Build Info
         run: jf rt build-publish petclinic-build ${{ github.run_number }}
 
-
-      # -----------------------------------------------------
-      # XRAY SCAN — FAIL IF VULNS FOUND
-      # -----------------------------------------------------
+      # XRAY SCAN - FAIL PIPELINE IF HIGH SEVERITY FOUND
       - name: Xray Security Scan
         run: |
           jf rt build-scan petclinic-build ${{ github.run_number }} \
             --vuln \
             --fail-on-severity High
-      # If you don't want to fail pipeline, remove:
-      #      --fail-on-severity High
+
 
       - name: Login to Docker registry (Artifactory)
         uses: docker/login-action@v3
