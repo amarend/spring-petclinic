@@ -23,7 +23,15 @@ jobs:
         JF_URL: ${{ secrets.JF_URL }}
         JF_USER: ${{ secrets.JF_USERNAME }}
         JF_PASSWORD: ${{ secrets.JF_PASSWORD }}
-        
+
+    - name: Configure JFrog connection
+      run: |
+        jfrog config add new-libs-snapshot \
+          --url="${{ secrets.JF_URL }}" \
+          --user="${{ secrets.JF_USERNAME }}" \
+          --password="${{ secrets.JF_PASSWORD }}" \
+          --interactive=false
+          
     - name: Build and Deploy using Maven
       run: |
         # Configure Maven to use Artifactory
