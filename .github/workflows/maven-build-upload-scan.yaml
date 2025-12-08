@@ -1,0 +1,54 @@
+name: Build → Upload to Artifactory → Xray Scan
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+
+jobs:
+  build-upload-scan:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        distribution: temurin
+        java-version: 17
+
+    - name: Install JFrog CLI
+      uses: jfrog/setup-jfrog-cli@v3
+
+    - name: Configure JFrog connection
+      run: |
+        jfrog config add artifactory-server \
+          --url="${{ secrets.JF_URL }}" \
+          --access-token="${{ secrets.JF_ACCESS_TOKEN }}" \
+          --interactive=false
+
+    - name: Build and Deploy using Maven (to Maven Repo)
+      env:
+        JFROG_REPO: ${{ secrets.JF_REPO }}
+      run: |
+        # Configure Maven to use Artifactory for deploy
+        jfrog rt mvn-config \
+          --server-id-resolve=artifactory-server \
+          --server-id-deploy=artifactory-server \
+          --repo-deploy-releases=$JFROG_REPO \
+          --repo-deploy-snapshots=$JFROG_REPO
+        
+        # Build & deploy jar to Artifactory
+        jfrog rt mvn "clean deploy -DskipTests" \
+          --build-name=petclinic-build \
+          --build-number=$GITHUB_RUN_NUMBER
+
+    - name: Publish build-info to Artifactory
+      run: |
+        jfrog rt build-publish petclinic-build $GITHUB_RUN_NUMBER
+
+    - name: Xray Scan Build (Security Scan)
+      run: |
+        jfrog rt build-scan petclinic-build $GITHUB_RUN_NUMBER --fail=true
