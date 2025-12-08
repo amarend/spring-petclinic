@@ -23,6 +23,14 @@ jobs:
       - name: Install JFrog CLI
         uses: jfrog/setup-jfrog-cli@v4
 
+      - name: Configure JFrog CLI
+        run: |
+          jf config add myserver \
+            --url="https://testakanksha.jfrog.io" \
+            --user=${{ secrets.JF_USERNAME }} \
+            --password=${{ secrets.JF_PASSWORD }} \
+            --interactive=false
+            
       - name: Upload JAR to Artifactory for scanning
         run: |
           jf rt upload "target/*.jar" \
