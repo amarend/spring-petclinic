@@ -34,7 +34,7 @@ jobs:
       - name: Upload JAR to Artifactory for scanning
         run: |
           jf rt upload "target/*.jar" \
-            "new-libs-snapshot-local/org/springframework/samples/spring-petclinic/4.0.0-SNAPSHOT" \
+            "new-libs-snapshot-local/org/springframework/samples/spring-petclinic/4.0.0-SNAPSHOT/" \
             --flat=true \
             --build-name=petclinic-build \
             --build-number=${{ github.run_number }}
