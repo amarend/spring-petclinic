@@ -1,0 +1,32 @@
+name: Scan Existing JAR
+
+on:
+  workflow_dispatch:
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Install JFrog CLI
+        uses: jfrog/setup-jfrog-cli@v4
+
+      - name: Configure JFrog
+        run: |
+          jfrog config add artifactory-server \
+            --url=${{ secrets.JF_URL }} \
+            --user=${{ secrets.JF_USERNAME }} \
+            --password=${{ secrets.JF_PASSWORD }} \
+            --interactive=false
+
+      - name: Download JAR from Artifactory
+        run: |
+          jfrog rt dl \
+            "new-libs-snapshot-local/org/springframework/samples/spring-petclinic/4.0.0-SNAPSHOT/spring-petclinic-4.0.0-20251208.164410-1.jar" \
+            --flat=true
+
+      - name: Xray scan the artifact
+        run: |
+          jfrog rt scan \
+            "new-libs-snapshot-local/org/springframework/samples/spring-petclinic/4.0.0-SNAPSHOT/spring-petclinic-4.0.0-20251208.164410-1.jar" \
+            --fail=true
