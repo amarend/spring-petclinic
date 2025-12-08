@@ -10,7 +10,13 @@
   <artifactId>spring-petclinic</artifactId>
   <version>4.0.0-SNAPSHOT</version>
   <name>petclinic</name>
-
+  <distributionManagement>
+    <snapshotRepository>
+        <id>snapshots</id>
+        <name>mt-frontend-ep-maven-test-libs-snapshot-snapshots</name>
+        <url>https://testakanksha.jfrog.io/artifactory/maven-test-libs-snapshot</url>
+    </snapshotRepository>
+  </distributionManagement>
   <properties>
     <!-- Generic properties -->
     <java.version>17</java.version>
