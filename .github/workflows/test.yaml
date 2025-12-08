@@ -28,12 +28,12 @@ jobs:
       run: |
         # Configure Maven to use Artifactory
         jfrog rt mvn-config \
-          --server-id-resolve=new-libs-snapshot-local \
-          --server-id-deploy=new-libs-snapshot-local \
-          --repo-resolve-releases=new-libs-snapshot-resolve-local \
-          --repo-resolve-snapshots=new-libs-snapshot-snapshot-local \
-          --repo-deploy-releases=new-libs-snapshot-deploy-local \
-          --repo-deploy-snapshots=new-libs-snapshot-deploy-snapshot
+          --server-id-resolve=new-libs-snapshot \
+          --server-id-deploy=new-libs-snapshot \
+          --repo-resolve-releases=new-libs-snapshot-resolve \
+          --repo-resolve-snapshots=new-libs-snapshot-snapshot \
+          --repo-deploy-releases=new-libs-snapshot-deploy \
+          --repo-deploy-snapshots=new-libs-snapshot-snapshot
         
         # Build & deploy with build info
         jfrog rt mvn "clean deploy -DskipTests" \
