@@ -40,6 +40,8 @@ jobs:
           --server-id-deploy=artifactory-server \
           --repo-resolve-releases=maven-test-libs-resolve-local \
           --repo-resolve-snapshots=maven-test-libs-snapshot-local \
+          --repo-deploy-releases=maven-test-libs-deploy-local \
+          --repo-deploy-snapshots=maven-test-libs-deploy-snapshot
         
         # Build & deploy jar to Artifactory
         jfrog rt mvn "clean deploy -DskipTests" \
