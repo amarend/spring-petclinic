@@ -33,10 +33,12 @@ jobs:
       env:
         JFROG_REPO: ${{ secrets.JF_REPO }}
       run: |
-        # Configure Maven to use Artifactory for deploy
+        # Configure Maven to use Artifactory for resolve & deploy
         jfrog rt mvn-config \
           --server-id-resolve=artifactory-server \
           --server-id-deploy=artifactory-server \
+          --repo-resolve-releases=$JFROG_REPO \
+          --repo-resolve-snapshots=$JFROG_REPO \
           --repo-deploy-releases=$JFROG_REPO \
           --repo-deploy-snapshots=$JFROG_REPO
         
@@ -44,6 +46,7 @@ jobs:
         jfrog rt mvn "clean deploy -DskipTests" \
           --build-name=petclinic-build \
           --build-number=$GITHUB_RUN_NUMBER
+
 
     - name: Publish build-info to Artifactory
       run: |
