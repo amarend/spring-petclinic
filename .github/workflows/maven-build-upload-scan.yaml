@@ -26,7 +26,8 @@ jobs:
       run: |
         jfrog config add artifactory-server \
           --url="${{ secrets.JF_URL }}" \
-          --access-token="${{ secrets.JF_ACCESS_TOKEN }}" \
+          --user ${{ secrets.JF_USERNAME }} \
+          --password ${{ secrets.JF_PASSWORD }} \
           --interactive=false
 
     - name: Build and Deploy using Maven (to Maven Repo)
