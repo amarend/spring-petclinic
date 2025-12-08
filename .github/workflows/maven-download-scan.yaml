@@ -4,23 +4,24 @@ on:
   workflow_dispatch:
 
 jobs:
-  scan:
+  build-and-push:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Install JFrog CLI
-        uses: jfrog/setup-jfrog-cli@v4
-
-      - name: Configure JFrog
-        run: |
-          jfrog config add artifactory-server \
-            --url=${{ secrets.JF_URL }} \
-            --user=${{ secrets.JF_USERNAME }} \
-            --password=${{ secrets.JF_PASSWORD }} \
-            --interactive=false
-            
+      - name: Checkout source
+        uses: actions/checkout@v4 
+        
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: "17"
+          distribution: "temurin"
+          cache: maven
+          
       - name: Build with Maven
         run: mvn clean package -DskipTests
+        
+      - name: Install JFrog CLI
+        uses: jfrog/setup-jfrog-cli@v4
 
       - name: Upload JAR to Artifactory for scanning
         run: |
