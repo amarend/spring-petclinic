@@ -18,15 +18,25 @@ jobs:
             --user=${{ secrets.JF_USERNAME }} \
             --password=${{ secrets.JF_PASSWORD }} \
             --interactive=false
+            
+      - name: Build with Maven
+        run: mvn clean package -DskipTests
 
-      - name: Download JAR from Artifactory
+      - name: Upload JAR to Artifactory for scanning
         run: |
-          jfrog rt dl \
-            "new-libs-snapshot-local/org/springframework/samples/spring-petclinic/4.0.0-SNAPSHOT/spring-petclinic-4.0.0-20251208.164410-1.jar" \
-            --flat=true
+          jf rt upload "target/*.jar" \
+            "new-libs-snapshot-local/org/springframework/samples/spring-petclinic/4.0.0-SNAPSHOT" \
+            --flat=true \
+            --build-name=petclinic-build \
+            --build-number=${{ github.run_number }}
 
-      - name: Xray scan the artifact
+      - name: Add Build Info
         run: |
-          jfrog rt scan \
-            "new-libs-snapshot-local/org/springframework/samples/spring-petclinic/4.0.0-SNAPSHOT/spring-petclinic-4.0.0-20251208.164410-1.jar" \
-            --fail=true
+          jf rt build-collect-env petclinic-build ${{ github.run_number }}
+
+      - name: Publish Build Info
+        run: jf rt build-publish petclinic-build ${{ github.run_number }}
+
+      - name: Xray Security Scan
+        run: |
+          jf rt build-scan petclinic-build ${{ github.run_number }}
