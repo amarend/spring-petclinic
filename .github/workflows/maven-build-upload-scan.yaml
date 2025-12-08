@@ -24,7 +24,7 @@ jobs:
 
     - name: Configure JFrog connection
       run: |
-        jfrog config add maven-spring-action \
+        jfrog config add maven-test-libs-snapshot \
           --url="${{ secrets.JF_URL }}" \
           --user ${{ secrets.JF_USERNAME }} \
           --password ${{ secrets.JF_PASSWORD }} \
@@ -36,8 +36,8 @@ jobs:
       run: |
         # Configure Maven to use Artifactory for resolve & deploy
         jfrog rt mvn-config \
-          --server-id-resolve=maven-spring-action \
-          --server-id-deploy=maven-spring-action \
+          --server-id-resolve=maven-test-libs-snapshot \
+          --server-id-deploy=maven-test-libs-snapshot \
           --repo-resolve-releases=maven-test-libs-resolve-local \
           --repo-resolve-snapshots=maven-test-libs-snapshot-local \
           --repo-deploy-releases=maven-test-libs-deploy-local \
