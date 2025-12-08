@@ -13,8 +13,8 @@
   <distributionManagement>
     <snapshotRepository>
         <id>snapshots</id>
-        <name>mt-frontend-ep-maven-test-libs-snapshot-snapshots</name>
-        <url>https://testakanksha.jfrog.io/artifactory/maven-test-libs-snapshot</url>
+        <name>mt-frontend-ep-new-libs-snapshot-snapshots</name>
+        <url>https://testakanksha.jfrog.io/artifactory/new-libs-snapshot</url>
     </snapshotRepository>
   </distributionManagement>
   <properties>
