@@ -30,6 +30,10 @@ jobs:
           --password ${{ secrets.JF_PASSWORD }} \
           --interactive=false
 
+    - name: Debug JFrog Config
+      run: |
+       jfrog config show
+       
     - name: Build and Deploy using Maven (to Maven Repo)
       env:
         JFROG_REPO: ${{ secrets.JF_REPO }}
